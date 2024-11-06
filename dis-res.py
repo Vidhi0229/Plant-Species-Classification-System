@@ -4,6 +4,9 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
+from torchvision.utils import save_image
+import os
+
 # Set random noise dimension, e.g., 100
 z_dim = 100
 img_channels = 3  # RGB images
@@ -20,6 +23,10 @@ batch_size = 64
 # Initialize optimizers
 gen_optimizer = optim.Adam(generator.parameters(), lr=learning_rate, betas=(0.5, 0.999))
 disc_optimizer = optim.Adam(discriminator.parameters(), lr=learning_rate, betas=(0.5, 0.999))
+
+# Directory for saving generated images
+output_dir = 'generated_images'
+os.makedirs(output_dir, exist_ok=True)
 
 # Training loop
 for epoch in range(num_epochs):
@@ -40,12 +47,20 @@ for epoch in range(num_epochs):
     num_real = (disc_output > threshold).sum().item()
     num_fake = (disc_output <= threshold).sum().item()
     
-    # Print statistics
+    # Print statistics every 100 epochs
+
+    
     if (epoch + 1) % 100 == 0:  # Print every 100 epochs
         print(f"Epoch [{epoch + 1}/{num_epochs}]")
         print(f"Generated image shape: {fake_images.shape}")  # Expected shape: [batch_size, img_channels, 64, 64]
         print(f"Discriminator output (mean): {disc_output_mean:.8f}")
         print(f"Number of images classified as real: {num_real}")
         print(f"Number of images classified as fake: {num_fake}")
+        
+        # Save the generated images every 100 epochs
+        save_image(fake_images, f'{output_dir}/generated_image_epoch_{epoch + 1}.png', nrow=8, normalize=True)
+        print(f"Generated image saved as 'generated_image_epoch_{epoch + 1}.png'")
         print("\n")
-    
+
+print("Image generation and saving complete.")
+
