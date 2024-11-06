@@ -3,7 +3,7 @@ from discriminator import Discriminator
 import torch
 import torch.optim as optim
 import torch.nn as nn
-
+import torch.nn.functional as F
 # Set random noise dimension, e.g., 100
 z_dim = 100
 img_channels = 3  # RGB images
