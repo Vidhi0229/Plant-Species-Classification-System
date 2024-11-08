@@ -2,3 +2,5 @@
 /working
 /leaf_dataset.pt
 /generated_images
+/__pycache__\
+/leaf_dataset.npy
